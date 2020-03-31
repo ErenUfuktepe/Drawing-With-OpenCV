@@ -12,7 +12,8 @@ class Settings:
     # Index 3 represents Color button.
     # Index 4 represents Pen Thickness entry.
     # Index 5 represents Circle Size entry.
-    window_components = [object, object, object, object, object, object]
+    # Index 6 represents Submit Size button.
+    window_components = [object, object, object, object, object, object,object]
     width, height = pyautogui.size()
     # Default variables.
     dynamic_setting = ['pen', (0, 255, 0), 3, 50]
@@ -64,10 +65,10 @@ class Settings:
         self.window_components[5].grid(row=1, column=2, pady=0)
         self.window_components[5].insert(0, 50)
 
-        submit = tk.Button(app, text="Submit Size", command=lambda: self.set_operation(self.dynamic_setting[0],
+        self.window_components[6] = tk.Button(app, text="Submit Size", command=lambda: self.set_operation(self.dynamic_setting[0],
                                                                                        self.dynamic_setting[2],
                                                                                        self.dynamic_setting[3]))
-        submit.pack(side=tk.LEFT)
+        self.window_components[6].pack(side=tk.LEFT)
 
         self.window.mainloop()
 
