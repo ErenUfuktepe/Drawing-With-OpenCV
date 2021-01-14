@@ -12,11 +12,18 @@ class Settings:
     # Index 3 represents Color button.
     # Index 4 represents Pen Thickness entry.
     # Index 5 represents Circle Size entry.
-    # Index 6 represents Submit Size button.
-    window_components = [object, object, object, object, object, object,object]
+    # Index 6 represents background color.
+    window_components = [object, object, object, object, object, object, object]
     width, height = pyautogui.size()
     # Default variables.
     dynamic_setting = ['pen', (0, 255, 0), 3, 50]
+    background = 'black'
+
+    def __init__(self):
+        print('Constructor called.')
+
+    def __del__(self):
+        print('Destructor called.')
 
     # Creates main window for settings bar.
     def start(self):
@@ -65,9 +72,7 @@ class Settings:
         self.window_components[5].grid(row=1, column=2, pady=0)
         self.window_components[5].insert(0, 50)
 
-        self.window_components[6] = tk.Button(app, text="Submit Size", command=lambda: self.set_operation(self.dynamic_setting[0],
-                                                                                       self.dynamic_setting[2],
-                                                                                       self.dynamic_setting[3]))
+        self.window_components[6] = tk.Button(app, text="Background Color", command=lambda: self.change_background_color(self.background))
         self.window_components[6].pack(side=tk.LEFT)
 
         self.window.mainloop()
@@ -115,4 +120,35 @@ class Settings:
                 self.window_components[index].configure(bg='green')
             else:
                 self.window_components[index].configure(bg='red')
+
+    # Listens to Entry objects and, when object values change, it applies changes automatically.
+    # Also, it checks whether the given input is valid or not.
+    def listen_thickness(self):
+        try:
+            int(self.window_components[5].get())
+            int(self.window_components[4].get())
+            self.dynamic_setting[3] = int(self.window_components[5].get())
+            self.dynamic_setting[2] = int(self.window_components[4].get())
+            return True
+        except ValueError:
+            if type(self.window_components[4]) == tk.Entry:
+                self.window_components[4].delete(0, tk.END)
+                self.window_components[4].insert(0, "3")
+            if type(self.window_components[5]) == tk.Entry:
+                self.window_components[5].delete(0, tk.END)
+                self.window_components[5].insert(0, "50")
+            return False
+        except AttributeError:
+            return False
+
+    # Returns background color
+    def get_background_color(self):
+        return self.background
+
+    # Change background color
+    def change_background_color(self, current_color):
+        if self.background == 'black':
+            self.background = 'white'
+        else:
+            self.background = 'black'
 

@@ -10,6 +10,10 @@ glob_x, glob_y = -1, -1
 # Default variables.
 settings = ['pen', (0, 255, 0), 3, 50]
 
+# Settings object
+setting_bar = Settings()
+background = 'black'
+
 
 # Drawing circle. Puts circle on the screen.
 # Left click puts normal circle.
@@ -61,10 +65,18 @@ def draw_line(event, x, y, flags, param):
 
 # Opens black screen for drawing.
 def drawing_action():
-    global settings
+    global settings, setting_bar, background
     cv2.namedWindow('Paint With OpenCV')
     cv2.moveWindow('Paint With OpenCV', 0, 0)
     while True:
+        if not background == setting_bar.get_background_color():
+            if setting_bar.get_background_color() == 'white':
+                img[img > -1] = 255
+                background = setting_bar.get_background_color()
+            else:
+                img[img > -1] = 0
+                background = setting_bar.get_background_color()
+        setting_bar.listen_thickness()
         settings = setting_bar.get_dynamic_settings()
         if settings[0] == 'pen':
             cv2.setMouseCallback('Paint With OpenCV', draw_line)
@@ -78,8 +90,9 @@ def drawing_action():
             break
 
 
-setting_bar = Settings()
 img = np.zeros((700, 700, 3), np.uint8)
 thread = threading.Thread(target=drawing_action, args=())
 thread.start()
 setting_bar.start()
+del setting_bar
+thread.join()
